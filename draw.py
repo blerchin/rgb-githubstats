@@ -1,15 +1,14 @@
-#! /usr/bin/python
+#!/usr/bin/python
 import math
 import json
 import subprocess
 import time
-from rgbmatrix import Adafruit_RGBmatrix
 config_data = open('config.json').read()
 config = json.loads(config_data)
 REFRESH_INTERVAL = config['refresh_interval']
 MATRIX_SIZE = 32
-matrix = Adafruit_RGBmatrix(MATRIX_SIZE,1) 
-while(True):
+
+def run(matrix):
 	data = json.loads(subprocess.check_output("./get_stats.rb", shell=True))
 
 	ROW_SIZE = len(data)
@@ -36,6 +35,14 @@ while(True):
 		else:
 		    color = colors[point['quartile']]
 		drawbox(row, col, color)
+def loop():
+	from rgbmatrix import Adafruit_RGBmatrix
+	matrix = Adafruit_RGBmatrix(MATRIX_SIZE,1) 
+	while(True):
+	    run(matrix)
+	    time.sleep(REFRESH_INTERVAL)
+	    matrix.Clear()
 
-	time.sleep(REFRESH_INTERVAL)
-	matrix.Clear()
+
+if __name__ == '__main__':
+    loop()
