@@ -1,15 +1,16 @@
 #!/usr/bin/python
 import math
 import json
+import os
 import subprocess
 import time
-config_data = open('config.json').read()
+config_data = open(os.path.join(os.path.dirname(__file__), 'config.json')).read()
 config = json.loads(config_data)
 REFRESH_INTERVAL = config['refresh_interval']
 MATRIX_SIZE = 32
 
 def run(matrix):
-	data = json.loads(subprocess.check_output("./get_stats.rb", shell=True))
+	data = json.loads(subprocess.check_output(os.path.join(os.path.dirname(__file__), 'get_stats.rb'), shell=True))
 
 	ROW_SIZE = len(data)
 	PIXEL_SIZE = MATRIX_SIZE / ROW_SIZE
